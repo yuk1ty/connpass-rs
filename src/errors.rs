@@ -30,3 +30,5 @@ pub enum HttpResponseError {
     #[error(transparent)]
     ReqwestError(#[from] reqwest::Error),
 }
+
+pub type ConnpassResult<T> = core::result::Result<T, ConnpassCliError>;

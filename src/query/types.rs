@@ -1,11 +1,13 @@
-use crate::errors::{ConnpassCliError, ValidationError};
+use std::convert::TryFrom;
+
+use crate::errors::{ConnpassCliError, ConnpassResult, ValidationError};
 
 use super::validator::Validator;
 
 pub(crate) struct FetchCountRange(pub u8);
 
 impl Validator for FetchCountRange {
-    fn validate(self) -> Result<Self, ConnpassCliError> {
+    fn validate(self) -> ConnpassResult<Self> {
         match self.0 {
             1..=100 => Ok(self),
             _ => Err(ConnpassCliError::Validation(ValidationError::OutOfRange {
@@ -19,7 +21,7 @@ impl Validator for FetchCountRange {
 pub(crate) struct FormatJson(pub String);
 
 impl Validator for FormatJson {
-    fn validate(self) -> Result<Self, ConnpassCliError> {
+    fn validate(self) -> ConnpassResult<Self> {
         if self.0 == "json" {
             Ok(self)
         } else {
@@ -37,6 +39,10 @@ pub enum OrderOption {
 }
 
 impl OrderOption {
+    pub fn new(id: u8) -> ConnpassResult<Self> {
+        Self::try_from(id)
+    }
+
     pub fn to_u8(self) -> u8 {
         self.into()
     }
@@ -48,6 +54,23 @@ impl Into<u8> for OrderOption {
             OrderOption::LastModifiedDate => 1,
             OrderOption::EventDate => 2,
             OrderOption::Newer => 3,
+        }
+    }
+}
+
+impl TryFrom<u8> for OrderOption {
+    type Error = ConnpassCliError;
+
+    fn try_from(value: u8) -> ConnpassResult<Self> {
+        match value {
+            1 => Ok(OrderOption::LastModifiedDate),
+            2 => Ok(OrderOption::EventDate),
+            3 => Ok(OrderOption::Newer),
+            _ => Err(ConnpassCliError::Validation(
+                ValidationError::InvalidToken {
+                    msg: format!("Invalid id came here: {}", &value),
+                },
+            )),
         }
     }
 }

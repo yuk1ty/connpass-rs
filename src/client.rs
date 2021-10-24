@@ -2,7 +2,7 @@ use once_cell::unsync::Lazy;
 use reqwest::{header::USER_AGENT, Client, Response, StatusCode};
 
 use crate::{
-    errors::{ConnpassCliError, HttpResponseError},
+    errors::{ConnpassCliError, ConnpassResult, HttpResponseError},
     query::Query,
     response::ConnpassResponse,
 };
@@ -14,8 +14,6 @@ const CRATE_USER_AGENT: Lazy<String> = Lazy::new(|| {
         env!("CARGO_PKG_VERSION")
     )
 });
-
-pub type ConnpassResult<T> = core::result::Result<T, ConnpassCliError>;
 
 #[derive(Clone)]
 pub struct ConnpassClient {
