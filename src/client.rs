@@ -1,4 +1,4 @@
-use once_cell::unsync::Lazy;
+use once_cell::sync::Lazy;
 use reqwest::{header::USER_AGENT, Client, Response, StatusCode};
 
 use crate::{
@@ -7,8 +7,8 @@ use crate::{
     response::ConnpassResponse,
 };
 
-const BASE_URL: &'static str = "https://connpass.com/api/v1/event/";
-const CRATE_USER_AGENT: Lazy<String> = Lazy::new(|| {
+const BASE_URL: &str = "https://connpass.com/api/v1/event/";
+static CRATE_USER_AGENT: Lazy<String> = Lazy::new(|| {
     format!(
         "connpass-rs/{} (+https://github.com/yuk1ty/connpass-rs)",
         env!("CARGO_PKG_VERSION")
@@ -42,7 +42,7 @@ impl ConnpassClient {
             .client
             .get(BASE_URL)
             .header(USER_AGENT, CRATE_USER_AGENT.as_str())
-            .query(&query.to_reqwest_query())
+            .query(&query.make_reqwest_query())
             .send()
             .await
             .map_err(|err| ConnpassCliError::HttpResponse(HttpResponseError::ReqwestError(err)))?;

@@ -39,7 +39,7 @@ impl Default for Query {
 }
 
 impl Query {
-    pub(crate) fn to_reqwest_query(self) -> Vec<(String, String)> {
+    pub(crate) fn make_reqwest_query(self) -> Vec<(String, String)> {
         let mut queries = Vec::new();
 
         assemble_query_param(&mut queries, self.event_id, "event_id");

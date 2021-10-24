@@ -148,17 +148,19 @@ impl QueryBuilder {
     }
 
     pub fn build(self) -> Result<Query, ConnpassCliError> {
-        let mut query = Query::default();
-
-        query.event_id = self.event_id;
-        query.keyword = self.keyword;
-        query.keyword_or = self.keyword_or;
-        query.ym = self.ym;
-        query.ymd = self.ymd;
-        query.nickname = self.nickname;
-        query.owner_nickname = self.owner_nickname;
-        query.start = self.start;
-        query.order = self.order;
+        let mut query = Query {
+            event_id: self.event_id,
+            keyword: self.keyword,
+            keyword_or: self.keyword_or,
+            ym: self.ym,
+            ymd: self.ymd,
+            nickname: self.nickname,
+            owner_nickname: self.owner_nickname,
+            series_id: self.series_id,
+            start: self.start,
+            order: self.order,
+            ..Default::default()
+        };
 
         if let Some(count) = self.count {
             query.count = Some(count.validate()?.0);

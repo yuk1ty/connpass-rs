@@ -48,9 +48,9 @@ impl OrderOption {
     }
 }
 
-impl Into<u8> for OrderOption {
-    fn into(self) -> u8 {
-        match self {
+impl From<OrderOption> for u8 {
+    fn from(opt: OrderOption) -> Self {
+        match opt {
             OrderOption::LastModifiedDate => 1,
             OrderOption::EventDate => 2,
             OrderOption::Newer => 3,
