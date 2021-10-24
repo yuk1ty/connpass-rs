@@ -1,3 +1,4 @@
+use helper::*;
 use std::vec;
 
 use super::{
@@ -52,13 +53,7 @@ impl QueryBuilder {
     }
 
     pub fn event_id(mut self, id: u32) -> Self {
-        self.event_id = match self.event_id {
-            Some(mut xs) => {
-                xs.push(id);
-                Some(xs)
-            }
-            None => Some(vec![id]),
-        };
+        self.event_id = push_or_create(self.event_id, id);
         self
     }
 
@@ -68,13 +63,7 @@ impl QueryBuilder {
     }
 
     pub fn keyword(mut self, keyword: String) -> Self {
-        self.keyword = match self.keyword {
-            Some(mut xs) => {
-                xs.push(keyword);
-                Some(xs)
-            }
-            None => Some(vec![keyword]),
-        };
+        self.keyword = push_or_create(self.keyword, keyword);
         self
     }
 
@@ -84,13 +73,7 @@ impl QueryBuilder {
     }
 
     pub fn keyword_or(mut self, keyword: String) -> Self {
-        self.keyword_or = match self.keyword_or {
-            Some(mut xs) => {
-                xs.push(keyword);
-                Some(xs)
-            }
-            None => Some(vec![keyword]),
-        };
+        self.keyword_or = push_or_create(self.keyword_or, keyword);
         self
     }
 
@@ -100,13 +83,7 @@ impl QueryBuilder {
     }
 
     pub fn ym(mut self, ym: u32) -> Self {
-        self.ym = match self.ym {
-            Some(mut xs) => {
-                xs.push(ym);
-                Some(xs)
-            }
-            None => Some(vec![ym]),
-        };
+        self.ym = push_or_create(self.ym, ym);
         self
     }
 
@@ -116,29 +93,17 @@ impl QueryBuilder {
     }
 
     pub fn ymd(mut self, ymd: u32) -> Self {
-        self.ymd = match self.ymd {
-            Some(mut xs) => {
-                xs.push(ymd);
-                Some(xs)
-            }
-            None => Some(vec![ymd]),
-        };
-        self
-    }
-
-    pub fn nickname(mut self, nickname: String) -> Self {
-        self.nickname = match self.nickname {
-            Some(mut xs) => {
-                xs.push(nickname);
-                Some(xs)
-            }
-            None => Some(vec![nickname]),
-        };
+        self.ymd = push_or_create(self.ymd, ymd);
         self
     }
 
     pub fn nicknames(mut self, nickname: Vec<String>) -> Self {
         self.nickname = Some(nickname);
+        self
+    }
+
+    pub fn nickname(mut self, nickname: String) -> Self {
+        self.nickname = push_or_create(self.nickname, nickname);
         self
     }
 
@@ -148,13 +113,7 @@ impl QueryBuilder {
     }
 
     pub fn owner_nickname(mut self, owner_nickname: String) -> Self {
-        self.owner_nickname = match self.owner_nickname {
-            Some(mut xs) => {
-                xs.push(owner_nickname);
-                Some(xs)
-            }
-            None => Some(vec![owner_nickname]),
-        };
+        self.owner_nickname = push_or_create(self.owner_nickname, owner_nickname);
         self
     }
 
@@ -164,13 +123,7 @@ impl QueryBuilder {
     }
 
     pub fn series_id(mut self, series_id: u32) -> Self {
-        self.series_id = match self.series_id {
-            Some(mut xs) => {
-                xs.push(series_id);
-                Some(xs)
-            }
-            None => Some(vec![series_id]),
-        };
+        self.series_id = push_or_create(self.series_id, series_id);
         self
     }
 
@@ -216,5 +169,17 @@ impl QueryBuilder {
         }
 
         Ok(query)
+    }
+}
+
+mod helper {
+    pub fn push_or_create<T>(source: Option<Vec<T>>, pushed: T) -> Option<Vec<T>> {
+        match source {
+            Some(mut xs) => {
+                xs.push(pushed);
+                Some(xs)
+            }
+            None => Some(vec![pushed]),
+        }
     }
 }
