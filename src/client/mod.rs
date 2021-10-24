@@ -1,7 +1,11 @@
 use once_cell::unsync::Lazy;
-use reqwest::{header::USER_AGENT, Client};
+use reqwest::{header::USER_AGENT, Client, Response, StatusCode};
 
-use crate::{query::Query, response::ConnpassResponse};
+use crate::{
+    errors::{ConnpassCliError, HttpResponseError},
+    query::Query,
+    response::ConnpassResponse,
+};
 
 const BASE_URL: &'static str = "https://connpass.com/api/v1/event/";
 const CRATE_USER_AGENT: Lazy<String> = Lazy::new(|| {
@@ -10,6 +14,8 @@ const CRATE_USER_AGENT: Lazy<String> = Lazy::new(|| {
         env!("CARGO_PKG_VERSION")
     )
 });
+
+type ConnpassResult<T> = core::result::Result<T, ConnpassCliError>;
 
 #[derive(Clone)]
 pub struct ConnpassClient {
@@ -33,15 +39,37 @@ impl ConnpassClient {
         ConnpassClient { client }
     }
 
-    pub async fn send_request(self, query: Query) -> Result<ConnpassResponse, reqwest::Error> {
-        self.client
+    pub async fn send_request(self, query: Query) -> ConnpassResult<ConnpassResponse> {
+        let response = self
+            .client
             .get(BASE_URL)
             .header(USER_AGENT, CRATE_USER_AGENT.as_str())
             .query(&query.to_reqwest_query())
             .send()
-            .await?
-            .json::<ConnpassResponse>()
             .await
+            .map_err(|err| ConnpassCliError::HttpResponse(HttpResponseError::ReqwestError(err)))?;
+        self.handler(response).await
+    }
+
+    async fn handler(&self, res: Response) -> ConnpassResult<ConnpassResponse> {
+        dbg!("response = {}", &res);
+        match res.status() {
+            StatusCode::OK => res.json::<ConnpassResponse>().await.map_err(|err| {
+                ConnpassCliError::HttpResponse(HttpResponseError::JsonDecode(format!("{}", err)))
+            }),
+            StatusCode::FORBIDDEN => {
+                Err(ConnpassCliError::HttpResponse(HttpResponseError::Forbidden))
+            }
+            StatusCode::INTERNAL_SERVER_ERROR => Err(ConnpassCliError::HttpResponse(
+                HttpResponseError::InternalServerError,
+            )),
+            StatusCode::SERVICE_UNAVAILABLE => Err(ConnpassCliError::HttpResponse(
+                HttpResponseError::ServiceUnavailable,
+            )),
+            s => Err(ConnpassCliError::HttpResponse(HttpResponseError::Various(
+                format!("Unexpected response received: {:?} (status code)", s),
+            ))),
+        }
     }
 }
 

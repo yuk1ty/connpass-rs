@@ -1,15 +1,17 @@
-use super::{error::ValidationError, validator::Validator};
+use crate::errors::{ConnpassCliError, ValidationError};
+
+use super::validator::Validator;
 
 pub(crate) struct FetchCountRange(pub u8);
 
 impl Validator for FetchCountRange {
-    fn validate(self) -> Result<Self, ValidationError> {
+    fn validate(self) -> Result<Self, ConnpassCliError> {
         match self.0 {
             1..=100 => Ok(self),
-            _ => Err(ValidationError::OutOfRange {
+            _ => Err(ConnpassCliError::Validation(ValidationError::OutOfRange {
                 msg: "`count` should be greater than or equal to 1 or less than or equals to 100. See more details: https://connpass.com/about/api/"
                     .to_string(),
-            }),
+            })),
         }
     }
 }
@@ -17,13 +19,13 @@ impl Validator for FetchCountRange {
 pub(crate) struct FormatJson(pub String);
 
 impl Validator for FormatJson {
-    fn validate(self) -> Result<Self, ValidationError> {
+    fn validate(self) -> Result<Self, ConnpassCliError> {
         if self.0 == "json" {
             Ok(self)
         } else {
-            Err(ValidationError::InvalidToken {
+            Err(ConnpassCliError::Validation(ValidationError::InvalidToken {
                 msg: "`format` can just accept the string \"json\". See more details: https://connpass.com/about/api/".to_string(),
-            })
+            }))
         }
     }
 }

@@ -1,7 +1,8 @@
 use helper::*;
 
+use crate::errors::ConnpassCliError;
+
 use super::{
-    error::ValidationError,
     types::{FetchCountRange, FormatJson},
     validator::Validator,
     OrderOption, Query,
@@ -146,7 +147,7 @@ impl QueryBuilder {
         self
     }
 
-    pub fn build(self) -> Result<Query, ValidationError> {
+    pub fn build(self) -> Result<Query, ConnpassCliError> {
         let mut query = Query::default();
 
         query.event_id = self.event_id;

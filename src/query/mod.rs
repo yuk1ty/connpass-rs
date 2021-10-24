@@ -1,7 +1,6 @@
 use self::types::OrderOption;
 
 pub mod builder;
-pub mod error;
 pub mod types;
 pub mod validator;
 
