@@ -1,5 +1,4 @@
 use helper::*;
-use std::vec;
 
 use super::{
     error::ValidationError,

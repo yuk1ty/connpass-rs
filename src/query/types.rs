@@ -7,7 +7,8 @@ impl Validator for FetchCountRange {
         match self.0 {
             1..=100 => Ok(self),
             _ => Err(ValidationError::OutOfRange {
-                msg: "count (取得件数) は最小値1、最大値100です。".to_string(),
+                msg: "`count` should be greater than or equal to 1 or less than or equals to 100. See more details: https://connpass.com/about/api/"
+                    .to_string(),
             }),
         }
     }
@@ -21,7 +22,7 @@ impl Validator for FormatJson {
             Ok(self)
         } else {
             Err(ValidationError::InvalidToken {
-                msg: "json という文字列のみ入力可能です。".to_string(),
+                msg: "`format` can just accept the string \"json\". See more details: https://connpass.com/about/api/".to_string(),
             })
         }
     }
