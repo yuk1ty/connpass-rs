@@ -185,3 +185,442 @@ mod helper {
         }
     }
 }
+
+#[cfg(test)]
+mod test {
+    use crate::{
+        errors::{ConnpassCliError, ValidationError},
+        query::{types::OrderOption, Query},
+    };
+
+    use super::QueryBuilder;
+
+    #[test]
+    fn test_add_event_ids() {
+        let builder = QueryBuilder::begin().event_ids(vec![1, 2, 3]);
+        assert_eq!(
+            builder.build().unwrap(),
+            Query {
+                event_id: Some(vec![1, 2, 3]),
+                ..Default::default()
+            }
+        );
+    }
+
+    #[test]
+    fn test_add_event_id() {
+        let builder = QueryBuilder::begin().event_id(1);
+        assert_eq!(
+            builder.build().unwrap(),
+            Query {
+                event_id: Some(vec![1]),
+                ..Default::default()
+            }
+        );
+    }
+
+    #[test]
+    fn test_call_multiple_time_event_id() {
+        let builder = QueryBuilder::begin().event_id(1).event_id(2).event_id(3);
+        assert_eq!(
+            builder.build().unwrap(),
+            Query {
+                event_id: Some(vec![1, 2, 3]),
+                ..Default::default()
+            }
+        );
+    }
+
+    #[test]
+    fn test_add_keywords() {
+        let builder = QueryBuilder::begin().keywords(vec![
+            "Python".to_string(),
+            "Rust".to_string(),
+            "Swift".to_string(),
+        ]);
+        assert_eq!(
+            builder.build().unwrap(),
+            Query {
+                keyword: Some(vec![
+                    "Python".to_string(),
+                    "Rust".to_string(),
+                    "Swift".to_string()
+                ]),
+                ..Default::default()
+            }
+        );
+    }
+
+    #[test]
+    fn test_add_keyword() {
+        let builder = QueryBuilder::begin().keyword("Rust".to_string());
+        assert_eq!(
+            builder.build().unwrap(),
+            Query {
+                keyword: Some(vec!["Rust".to_string()]),
+                ..Default::default()
+            }
+        );
+    }
+
+    #[test]
+    fn test_call_multiple_time_keyword() {
+        let builder = QueryBuilder::begin()
+            .keyword("Python".to_string())
+            .keyword("Rust".to_string())
+            .keyword("Swift".to_string());
+        assert_eq!(
+            builder.build().unwrap(),
+            Query {
+                keyword: Some(vec![
+                    "Python".to_string(),
+                    "Rust".to_string(),
+                    "Swift".to_string()
+                ]),
+                ..Default::default()
+            }
+        );
+    }
+
+    #[test]
+    fn test_add_keywords_or() {
+        let builder = QueryBuilder::begin().keywords_or(vec![
+            "Python".to_string(),
+            "Rust".to_string(),
+            "Swift".to_string(),
+        ]);
+        assert_eq!(
+            builder.build().unwrap(),
+            Query {
+                keyword_or: Some(vec![
+                    "Python".to_string(),
+                    "Rust".to_string(),
+                    "Swift".to_string()
+                ]),
+                ..Default::default()
+            }
+        );
+    }
+
+    #[test]
+    fn test_add_keyword_or() {
+        let builder = QueryBuilder::begin().keyword_or("Rust".to_string());
+        assert_eq!(
+            builder.build().unwrap(),
+            Query {
+                keyword_or: Some(vec!["Rust".to_string()]),
+                ..Default::default()
+            }
+        );
+    }
+
+    #[test]
+    fn test_call_multiple_time_keyword_or() {
+        let builder = QueryBuilder::begin()
+            .keyword_or("Python".to_string())
+            .keyword_or("Rust".to_string())
+            .keyword_or("Swift".to_string());
+        assert_eq!(
+            builder.build().unwrap(),
+            Query {
+                keyword_or: Some(vec![
+                    "Python".to_string(),
+                    "Rust".to_string(),
+                    "Swift".to_string()
+                ]),
+                ..Default::default()
+            }
+        );
+    }
+
+    #[test]
+    fn test_add_yms() {
+        let builder = QueryBuilder::begin().yms(vec![202101, 202102, 202103]);
+        assert_eq!(
+            builder.build().unwrap(),
+            Query {
+                ym: Some(vec![202101, 202102, 202103]),
+                ..Default::default()
+            }
+        );
+    }
+
+    #[test]
+    fn test_add_ym() {
+        let builder = QueryBuilder::begin().ym(202101);
+        assert_eq!(
+            builder.build().unwrap(),
+            Query {
+                ym: Some(vec![202101]),
+                ..Default::default()
+            }
+        );
+    }
+
+    #[test]
+    fn test_call_multiple_time_ym() {
+        let builder = QueryBuilder::begin().ym(202101).ym(202102).ym(202103);
+        assert_eq!(
+            builder.build().unwrap(),
+            Query {
+                ym: Some(vec![202101, 202102, 202103]),
+                ..Default::default()
+            }
+        );
+    }
+
+    #[test]
+    fn test_add_ymds() {
+        let builder = QueryBuilder::begin().ymds(vec![20210101, 20210201, 20210301]);
+        assert_eq!(
+            builder.build().unwrap(),
+            Query {
+                ymd: Some(vec![20210101, 20210201, 20210301]),
+                ..Default::default()
+            }
+        );
+    }
+
+    #[test]
+    fn test_add_ymd() {
+        let builder = QueryBuilder::begin().ymd(20210101);
+        assert_eq!(
+            builder.build().unwrap(),
+            Query {
+                ymd: Some(vec![20210101]),
+                ..Default::default()
+            }
+        );
+    }
+
+    #[test]
+    fn test_call_multiple_time_ymd() {
+        let builder = QueryBuilder::begin()
+            .ymd(20210101)
+            .ymd(20210201)
+            .ymd(20210301);
+        assert_eq!(
+            builder.build().unwrap(),
+            Query {
+                ymd: Some(vec![20210101, 20210201, 20210301]),
+                ..Default::default()
+            }
+        );
+    }
+
+    #[test]
+    fn test_add_nicknames() {
+        let builder = QueryBuilder::begin().nicknames(vec![
+            "Harry".to_string(),
+            "Ron".to_string(),
+            "Hermione".to_string(),
+        ]);
+        assert_eq!(
+            builder.build().unwrap(),
+            Query {
+                nickname: Some(vec![
+                    "Harry".to_string(),
+                    "Ron".to_string(),
+                    "Hermione".to_string()
+                ]),
+                ..Default::default()
+            }
+        );
+    }
+
+    #[test]
+    fn test_add_nickname() {
+        let builder = QueryBuilder::begin().nickname("Harry".to_string());
+        assert_eq!(
+            builder.build().unwrap(),
+            Query {
+                nickname: Some(vec!["Harry".to_string()]),
+                ..Default::default()
+            }
+        );
+    }
+
+    #[test]
+    fn test_call_multiple_time_nickname() {
+        let builder = QueryBuilder::begin()
+            .nickname("Harry".to_string())
+            .nickname("Ron".to_string())
+            .nickname("Hermione".to_string());
+        assert_eq!(
+            builder.build().unwrap(),
+            Query {
+                nickname: Some(vec![
+                    "Harry".to_string(),
+                    "Ron".to_string(),
+                    "Hermione".to_string()
+                ]),
+                ..Default::default()
+            }
+        );
+    }
+
+    #[test]
+    fn test_add_owner_nicknames() {
+        let builder = QueryBuilder::begin().owner_nicknames(vec![
+            "Harry".to_string(),
+            "Ron".to_string(),
+            "Hermione".to_string(),
+        ]);
+        assert_eq!(
+            builder.build().unwrap(),
+            Query {
+                owner_nickname: Some(vec![
+                    "Harry".to_string(),
+                    "Ron".to_string(),
+                    "Hermione".to_string()
+                ]),
+                ..Default::default()
+            }
+        );
+    }
+
+    #[test]
+    fn test_add_owner_nickname() {
+        let builder = QueryBuilder::begin().owner_nickname("Harry".to_string());
+        assert_eq!(
+            builder.build().unwrap(),
+            Query {
+                owner_nickname: Some(vec!["Harry".to_string()]),
+                ..Default::default()
+            }
+        );
+    }
+
+    #[test]
+    fn test_call_multiple_time_owner_nickname() {
+        let builder = QueryBuilder::begin()
+            .owner_nickname("Harry".to_string())
+            .owner_nickname("Ron".to_string())
+            .owner_nickname("Hermione".to_string());
+        assert_eq!(
+            builder.build().unwrap(),
+            Query {
+                owner_nickname: Some(vec![
+                    "Harry".to_string(),
+                    "Ron".to_string(),
+                    "Hermione".to_string()
+                ]),
+                ..Default::default()
+            }
+        );
+    }
+
+    #[test]
+    fn test_add_series_ids() {
+        let builder = QueryBuilder::begin().series_ids(vec![1, 2, 3]);
+        assert_eq!(
+            builder.build().unwrap(),
+            Query {
+                series_id: Some(vec![1, 2, 3]),
+                ..Default::default()
+            }
+        );
+    }
+
+    #[test]
+    fn test_add_series_id() {
+        let builder = QueryBuilder::begin().series_id(1);
+        assert_eq!(
+            builder.build().unwrap(),
+            Query {
+                series_id: Some(vec![1]),
+                ..Default::default()
+            }
+        );
+    }
+
+    #[test]
+    fn test_call_multiple_time_series_id() {
+        let builder = QueryBuilder::begin().series_id(1).series_id(2).series_id(3);
+        assert_eq!(
+            builder.build().unwrap(),
+            Query {
+                series_id: Some(vec![1, 2, 3]),
+                ..Default::default()
+            }
+        );
+    }
+
+    #[test]
+    fn test_call_start() {
+        let builder = QueryBuilder::begin().start(1);
+        assert_eq!(
+            builder.build().unwrap(),
+            Query {
+                start: Some(1),
+                ..Default::default()
+            }
+        );
+    }
+
+    #[test]
+    fn test_call_order() {
+        let builder = QueryBuilder::begin().order(OrderOption::LastModifiedDate);
+        assert_eq!(
+            builder.build().unwrap(),
+            Query {
+                order: Some(OrderOption::LastModifiedDate),
+                ..Default::default()
+            }
+        );
+    }
+
+    #[test]
+    fn test_call_count() {
+        let builder = QueryBuilder::begin().count(50);
+        assert_eq!(
+            builder.build().unwrap(),
+            Query {
+                count: Some(50),
+                ..Default::default()
+            }
+        );
+    }
+
+    #[test]
+    fn test_validation_count_range() {
+        let builder = QueryBuilder::begin().count(0);
+        assert!(matches!(
+            builder.build(),
+            Err(ConnpassCliError::Validation(ValidationError::OutOfRange {
+                msg: _
+            }))
+        ));
+
+        let builder = QueryBuilder::begin().count(101);
+        assert!(matches!(
+            builder.build(),
+            Err(ConnpassCliError::Validation(ValidationError::OutOfRange {
+                msg: _
+            }))
+        ));
+    }
+
+    #[test]
+    fn test_call_format() {
+        let builder = QueryBuilder::begin().format("json".to_string());
+        assert_eq!(
+            builder.build().unwrap(),
+            Query {
+                format: Some("json".to_string()),
+                ..Default::default()
+            }
+        );
+    }
+
+    #[test]
+    fn test_validation_format() {
+        let builder = QueryBuilder::begin().format("yaml".to_string());
+        assert!(matches!(
+            builder.build(),
+            Err(ConnpassCliError::Validation(
+                ValidationError::InvalidToken { msg: _ }
+            ))
+        ));
+    }
+}

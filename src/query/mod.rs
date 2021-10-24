@@ -4,6 +4,7 @@ pub mod builder;
 pub mod types;
 pub mod validator;
 
+#[derive(PartialEq, Debug)]
 pub struct Query {
     event_id: Option<Vec<u32>>,
     keyword: Option<Vec<String>>,

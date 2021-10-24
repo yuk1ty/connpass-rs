@@ -32,6 +32,7 @@ impl Validator for FormatJson {
     }
 }
 
+#[derive(PartialEq, Debug)]
 pub enum OrderOption {
     LastModifiedDate = 1,
     EventDate = 2,

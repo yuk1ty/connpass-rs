@@ -71,7 +71,7 @@ impl ConnpassClient {
     }
 }
 
-#[cfg(test)]
+#[cfg(ignore)]
 mod test {
     use crate::query::builder::QueryBuilder;
 
