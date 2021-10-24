@@ -1,8 +1,15 @@
-use reqwest::Client;
+use once_cell::unsync::Lazy;
+use reqwest::{header::USER_AGENT, Client};
 
 use crate::{query::Query, response::ConnpassResponse};
 
-const BASE_URL: &str = "https://connpass.com/api/v1/event/";
+const BASE_URL: &'static str = "https://connpass.com/api/v1/event/";
+const CRATE_USER_AGENT: Lazy<String> = Lazy::new(|| {
+    format!(
+        "connpass-rs/{} (+https://github.com/yuk1ty/connpass-rs)",
+        env!("CARGO_PKG_VERSION")
+    )
+});
 
 #[derive(Clone)]
 pub struct ConnpassClient {
@@ -27,14 +34,14 @@ impl ConnpassClient {
     }
 
     pub async fn send_request(self, query: Query) -> Result<ConnpassResponse, reqwest::Error> {
-        let result = self
-            .client
+        self.client
             .get(BASE_URL)
-            .header("User-Agent", "connpass-rs client")
+            .header(USER_AGENT, CRATE_USER_AGENT.as_str())
             .query(&query.to_reqwest_query())
             .send()
-            .await?;
-        result.json::<ConnpassResponse>().await
+            .await?
+            .json::<ConnpassResponse>()
+            .await
     }
 }
 
