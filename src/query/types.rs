@@ -75,3 +75,58 @@ impl TryFrom<u8> for OrderOption {
         }
     }
 }
+
+#[cfg(test)]
+mod test {
+    use crate::{
+        errors::{ConnpassCliError, ValidationError},
+        query::validator::Validator,
+    };
+
+    use super::{FetchCountRange, FormatJson};
+
+    #[test]
+    fn test_validate_fetch_count_range() {
+        let value = FetchCountRange(1);
+        let r = value.validate();
+        assert!(r.is_ok());
+
+        let value = FetchCountRange(100);
+        let r = value.validate();
+        assert!(r.is_ok());
+
+        let value = FetchCountRange(0);
+        let r = value.validate();
+        assert!(matches!(
+            r,
+            Err(ConnpassCliError::Validation(ValidationError::OutOfRange {
+                msg: _
+            }))
+        ));
+
+        let value = FetchCountRange(101);
+        let r = value.validate();
+        assert!(matches!(
+            r,
+            Err(ConnpassCliError::Validation(ValidationError::OutOfRange {
+                msg: _
+            }))
+        ));
+    }
+
+    #[test]
+    fn test_validate_format_token() {
+        let value = FormatJson("json".to_string());
+        let r = value.validate();
+        assert!(r.is_ok());
+
+        let value = FormatJson("yaml".to_string());
+        let r = value.validate();
+        assert!(matches!(
+            r,
+            Err(ConnpassCliError::Validation(
+                ValidationError::InvalidToken { msg: _ }
+            ))
+        ));
+    }
+}
