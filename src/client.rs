@@ -15,7 +15,7 @@ const CRATE_USER_AGENT: Lazy<String> = Lazy::new(|| {
     )
 });
 
-type ConnpassResult<T> = core::result::Result<T, ConnpassCliError>;
+pub type ConnpassResult<T> = core::result::Result<T, ConnpassCliError>;
 
 #[derive(Clone)]
 pub struct ConnpassClient {
