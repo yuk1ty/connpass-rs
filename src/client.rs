@@ -153,26 +153,3 @@ pub mod blocking {
         }
     }
 }
-
-#[cfg(ignore)]
-mod test {
-    use crate::query::builder::QueryBuilder;
-
-    use super::ConnpassClient;
-
-    #[tokio::test]
-    async fn test() {
-        let query = QueryBuilder::begin()
-            .keywords(vec![
-                "python".to_string(),
-                "rust".to_string(),
-                "swift".to_string(),
-            ])
-            .build()
-            .unwrap();
-        let client = ConnpassClient::new();
-        let task = client.clone().send_request(query);
-        let r = task.await;
-        println!("{:?}", r.unwrap());
-    }
-}

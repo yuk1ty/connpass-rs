@@ -14,3 +14,12 @@ thiserror = "1.0.30"
 
 [features]
 blocking = ["reqwest/blocking"]
+
+[[example]]
+name = "get_single_event"
+
+[[example]]
+name = "get_events_with_various_queries"
+
+[[example]]
+name = "get_single_event_blocking"
