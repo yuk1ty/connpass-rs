@@ -1,4 +1,6 @@
 //! Blocking API example.
+//! If you use `connpass_rs::client::blocking::ConnpassClient`, then can send requests with blocking.
+//! For example, this can be used for CLI tools with `clap` crate, etc.
 
 use connpass_rs::{client::blocking::ConnpassClient, query::builder::QueryBuilder};
 

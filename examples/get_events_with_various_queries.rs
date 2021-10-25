@@ -6,8 +6,10 @@ use connpass_rs::{
 #[tokio::main]
 async fn main() {
     let query = QueryBuilder::begin()
+        // You can build query parameters by functions that accept a single argument,
         .keyword_or("Python".to_string())
         .keyword_or("機械学習".to_string())
+        // or can do by functions that accept a `Vec` argument.
         .yms(vec![202110, 202111])
         .order(OrderOption::Newer)
         .count(15)

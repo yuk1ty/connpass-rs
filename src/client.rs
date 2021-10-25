@@ -114,6 +114,8 @@ pub mod blocking {
             ConnpassClient { client }
         }
 
+        /// Sends requests and gets response from API.
+        /// The response is internally converted to `response::ConnpassResponse` with handling errors.
         pub fn send_request(self, query: Query) -> ConnpassResult<ConnpassResponse> {
             let response = self
                 .client

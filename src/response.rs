@@ -1,8 +1,9 @@
+//! Represents the response from connpass API.
+//! For more details in https://connpass.com/about/api/.
+//! The data class is along with the specification.
+
 use serde::{Deserialize, Serialize};
 
-/// Represents the response from connpass API.
-/// For more details in https://connpass.com/about/api/.
-/// The data class is along with the specification.
 #[derive(Serialize, Deserialize, PartialEq, Clone, Debug)]
 pub struct ConnpassResponse {
     results_returned: u32,

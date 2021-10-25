@@ -43,6 +43,13 @@ impl Default for QueryBuilder {
     }
 }
 
+/// An implementation for QueryBuilder.
+/// There are two function types:
+/// 1. functions that can accept a single argument.
+/// 2. functions that can acceps a `Vec` type argument.
+///
+/// The former functions simply add the accepted value to this builder,
+/// but the latter functions _replace_ a value in accumulated in this builder by the accepted one.
 impl QueryBuilder {
     /// Initializes `QueryBuilder`.
     pub fn begin() -> Self {
@@ -149,6 +156,13 @@ impl QueryBuilder {
         self
     }
 
+    /// Convert from `QueryBuilder` to `Query` with some validation checks.
+    /// The following checks run in this function:
+    /// 1. validate the `count` value in range of 0 to 100.
+    /// 2. validate if the `format` value is just "json".
+    ///
+    /// These validation specifications are described in connpass's documentation.
+    /// Please have a look at https://connpass.com/about/api/.
     pub fn build(self) -> Result<Query, ConnpassCliError> {
         let mut query = Query {
             event_id: self.event_id,

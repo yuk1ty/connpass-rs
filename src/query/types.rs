@@ -4,6 +4,7 @@ use crate::errors::{ConnpassCliError, ConnpassResult, ValidationError};
 
 use super::validator::Validator;
 
+/// A data type that represents the range of `count` value.
 pub(crate) struct FetchCountRange(pub u8);
 
 impl Validator for FetchCountRange {
@@ -18,6 +19,7 @@ impl Validator for FetchCountRange {
     }
 }
 
+/// A data type that represents the `format` value.
 pub(crate) struct FormatJson(pub String);
 
 impl Validator for FormatJson {
@@ -32,10 +34,15 @@ impl Validator for FormatJson {
     }
 }
 
+/// The order of search result.
+/// See more details in https://connpass.com/about/api/.
 #[derive(PartialEq, Debug)]
 pub enum OrderOption {
+    /// 「更新日時順」
     LastModifiedDate = 1,
+    /// 「開催日順」
     EventDate = 2,
+    /// 「新着順」
     Newer = 3,
 }
 
