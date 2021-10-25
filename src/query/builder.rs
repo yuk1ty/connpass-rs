@@ -8,6 +8,7 @@ use super::{
     OrderOption, Query,
 };
 
+/// Utility builder for building `query::Query`.
 pub struct QueryBuilder {
     event_id: Option<Vec<u32>>,
     keyword: Option<Vec<String>>,
@@ -43,6 +44,7 @@ impl Default for QueryBuilder {
 }
 
 impl QueryBuilder {
+    /// Initializes `QueryBuilder`.
     pub fn begin() -> Self {
         QueryBuilder::default()
     }

@@ -15,6 +15,7 @@ static CRATE_USER_AGENT: Lazy<String> = Lazy::new(|| {
     )
 });
 
+/// Async API client for accessing and fetching data from connpass API.
 #[derive(Clone)]
 pub struct ConnpassClient {
     client: Client,
@@ -33,10 +34,13 @@ impl ConnpassClient {
         ConnpassClient::default()
     }
 
+    /// Initializes client with your own client.
     pub fn with_client(client: Client) -> Self {
         ConnpassClient { client }
     }
 
+    /// Sends requests and gets response from API.
+    /// The response is internally converted to `response::ConnpassResponse` with handling errors.
     pub async fn send_request(self, query: Query) -> ConnpassResult<ConnpassResponse> {
         let response = self
             .client
