@@ -70,7 +70,7 @@ jobs:
             ${{ runner.os }}-cargo-${{ github.job }}-
             ${{ runner.os }}-cargo-
       - name: Build (denying warnings)
-        run: RUSTFLAGS='-D warnings' cargo build --all-targets --all-features --verbose
+        run: RUSTFLAGS='-D warnings' cargo build --all-targets --all-features --examples --verbose
 
       - name: Run tests
-        run: cargo test --verbose
+        run: cargo test --all-features --verbose
