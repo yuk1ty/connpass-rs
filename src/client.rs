@@ -1,3 +1,7 @@
+//! Sends requets to connpass API server with queries.
+//! This module provides non-blocking API (on tokio runtime) normally, but when `blocking` feature is enabled, additionally start to provide blocking API.
+//! These clients are internally using `reqwest` crate.
+
 use once_cell::sync::Lazy;
 use reqwest::{header::USER_AGENT, Client, Response, StatusCode};
 
@@ -41,6 +45,29 @@ impl ConnpassClient {
 
     /// Sends requests and gets response from API.
     /// The response is internally converted to `response::ConnpassResponse` with handling errors.
+    ///
+    /// # Arguments
+    /// If no condition is set to `query` and it's passed, the default options are applied.
+    /// The defaults are described in the connpass API specification page.
+    ///
+    /// # Example:
+    /// ```
+    /// use connpass_rs::{client::ConnpassClient, query::builder::QueryBuilder};
+    ///
+    /// #[tokio::main]
+    /// async fn main() {
+    ///     // fetch https://rust.connpass.com/event/228732/
+    ///     let query = QueryBuilder::begin().event_id(228732).build();
+    ///     if let Ok(query) = query {
+    ///         let client = ConnpassClient::new();
+    ///         let res = client.send_request(query).await;
+    ///         match res {
+    ///             Ok(r) => println!("{:?}", r),
+    ///             Err(err) => eprintln!("{:?}", err),
+    ///         }
+    ///     }
+    /// }
+    /// ```
     pub async fn send_request(self, query: Query) -> ConnpassResult<ConnpassResponse> {
         let response = self
             .client
@@ -75,6 +102,7 @@ impl ConnpassClient {
     }
 }
 
+/// The client using blokcing. This one capitalizes on `reqwest::blocking` API.
 #[cfg(feature = "blocking")]
 pub mod blocking {
     use reqwest::{
@@ -114,8 +142,30 @@ pub mod blocking {
             ConnpassClient { client }
         }
 
-        /// Sends requests and gets response from API.
+        /// Sends requests and gets response from API in the blocking context.
         /// The response is internally converted to `response::ConnpassResponse` with handling errors.
+        ///
+        /// # Arguments
+        /// If no condition is set to `query` and it's passed, the default options are applied.
+        /// The defaults are described in the connpass API specification page.
+        ///
+        /// # Example:
+        /// ```
+        /// use connpass_rs::{client::blocking::ConnpassClient, query::builder::QueryBuilder};
+        ///
+        /// fn main() {
+        ///     // fetch https://rust.connpass.com/event/228732/
+        ///     let query = QueryBuilder::begin().event_id(228732).build();
+        ///     if let Ok(query) = query {
+        ///         let client = ConnpassClient::new();
+        ///         let res = client.send_request(query);
+        ///         match res {
+        ///             Ok(r) => println!("{:?}", r),
+        ///             Err(err) => eprintln!("{:?}", err),
+        ///         }
+        ///     }
+        /// }
+        /// ```
         pub fn send_request(self, query: Query) -> ConnpassResult<ConnpassResponse> {
             let response = self
                 .client

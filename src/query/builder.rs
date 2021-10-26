@@ -46,7 +46,7 @@ impl Default for QueryBuilder {
 /// An implementation for QueryBuilder.
 /// There are two function types:
 /// 1. functions that can accept a single argument.
-/// 2. functions that can acceps a `Vec` type argument.
+/// 2. functions that can accept a `Vec` type argument.
 ///
 /// The former ones simply add the accepted value to this builder,
 /// but the latter ones always _replace_ the value in placed in this builder by the accepted one.
@@ -71,8 +71,8 @@ impl QueryBuilder {
         self
     }
 
-    pub fn keyword(mut self, keyword: String) -> Self {
-        self.keyword = push_or_create(self.keyword, keyword);
+    pub fn keyword(mut self, keyword: impl Into<String>) -> Self {
+        self.keyword = push_or_create(self.keyword, keyword.into());
         self
     }
 
@@ -81,8 +81,8 @@ impl QueryBuilder {
         self
     }
 
-    pub fn keyword_or(mut self, keyword: String) -> Self {
-        self.keyword_or = push_or_create(self.keyword_or, keyword);
+    pub fn keyword_or(mut self, keyword: impl Into<String>) -> Self {
+        self.keyword_or = push_or_create(self.keyword_or, keyword.into());
         self
     }
 
@@ -111,8 +111,8 @@ impl QueryBuilder {
         self
     }
 
-    pub fn nickname(mut self, nickname: String) -> Self {
-        self.nickname = push_or_create(self.nickname, nickname);
+    pub fn nickname(mut self, nickname: impl Into<String>) -> Self {
+        self.nickname = push_or_create(self.nickname, nickname.into());
         self
     }
 
@@ -121,8 +121,8 @@ impl QueryBuilder {
         self
     }
 
-    pub fn owner_nickname(mut self, owner_nickname: String) -> Self {
-        self.owner_nickname = push_or_create(self.owner_nickname, owner_nickname);
+    pub fn owner_nickname(mut self, owner_nickname: impl Into<String>) -> Self {
+        self.owner_nickname = push_or_create(self.owner_nickname, owner_nickname.into());
         self
     }
 
@@ -151,12 +151,12 @@ impl QueryBuilder {
         self
     }
 
-    pub fn format(mut self, format: String) -> Self {
-        self.format = Some(FormatJson(format));
+    pub fn format(mut self, format: impl Into<String>) -> Self {
+        self.format = Some(FormatJson(format.into()));
         self
     }
 
-    /// Convert from `QueryBuilder` to `Query` with some validation checks.
+    /// Converts from `QueryBuilder` to `Query` with some validation checks.
     /// The following checks run in this function:
     /// 1. validate the `count` value in range of 0 to 100.
     /// 2. validate if the `format` value is just "json".
@@ -269,7 +269,7 @@ mod test {
 
     #[test]
     fn test_add_keyword() {
-        let builder = QueryBuilder::begin().keyword("Rust".to_string());
+        let builder = QueryBuilder::begin().keyword("Rust");
         assert_eq!(
             builder.build().unwrap(),
             Query {
@@ -320,7 +320,7 @@ mod test {
 
     #[test]
     fn test_add_keyword_or() {
-        let builder = QueryBuilder::begin().keyword_or("Rust".to_string());
+        let builder = QueryBuilder::begin().keyword_or("Rust");
         assert_eq!(
             builder.build().unwrap(),
             Query {
@@ -446,7 +446,7 @@ mod test {
 
     #[test]
     fn test_add_nickname() {
-        let builder = QueryBuilder::begin().nickname("Harry".to_string());
+        let builder = QueryBuilder::begin().nickname("Harry");
         assert_eq!(
             builder.build().unwrap(),
             Query {
@@ -459,9 +459,9 @@ mod test {
     #[test]
     fn test_call_multiple_time_nickname() {
         let builder = QueryBuilder::begin()
-            .nickname("Harry".to_string())
-            .nickname("Ron".to_string())
-            .nickname("Hermione".to_string());
+            .nickname("Harry")
+            .nickname("Ron")
+            .nickname("Hermione");
         assert_eq!(
             builder.build().unwrap(),
             Query {
@@ -497,7 +497,7 @@ mod test {
 
     #[test]
     fn test_add_owner_nickname() {
-        let builder = QueryBuilder::begin().owner_nickname("Harry".to_string());
+        let builder = QueryBuilder::begin().owner_nickname("Harry");
         assert_eq!(
             builder.build().unwrap(),
             Query {
@@ -510,9 +510,9 @@ mod test {
     #[test]
     fn test_call_multiple_time_owner_nickname() {
         let builder = QueryBuilder::begin()
-            .owner_nickname("Harry".to_string())
-            .owner_nickname("Ron".to_string())
-            .owner_nickname("Hermione".to_string());
+            .owner_nickname("Harry")
+            .owner_nickname("Ron")
+            .owner_nickname("Hermione");
         assert_eq!(
             builder.build().unwrap(),
             Query {
@@ -619,7 +619,7 @@ mod test {
 
     #[test]
     fn test_call_format() {
-        let builder = QueryBuilder::begin().format("json".to_string());
+        let builder = QueryBuilder::begin().format("json");
         assert_eq!(
             builder.build().unwrap(),
             Query {
@@ -631,7 +631,7 @@ mod test {
 
     #[test]
     fn test_validation_format() {
-        let builder = QueryBuilder::begin().format("yaml".to_string());
+        let builder = QueryBuilder::begin().format("yaml");
         assert!(matches!(
             builder.build(),
             Err(ConnpassCliError::Validation(

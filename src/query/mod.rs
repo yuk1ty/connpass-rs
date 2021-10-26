@@ -1,11 +1,14 @@
+//! Provides the utility data for query parameters.
+//! The core data type is `Query`, but it's recommended that build it through `QueryBuilder`.
+
 use self::types::OrderOption;
 
 pub mod builder;
 pub mod types;
 pub mod validator;
 
-/// A query data class to extract the specific data from connpass API.
-/// For more details about respective fields: https://connpass.com/about/api/
+/// A query data to extract the specific data from connpass API.
+/// For more details about the respective fields: https://connpass.com/about/api/
 /// The struct is along with the specification.
 #[derive(PartialEq, Debug)]
 pub struct Query {

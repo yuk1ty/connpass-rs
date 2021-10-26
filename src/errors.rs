@@ -1,3 +1,5 @@
+//! Provides error types using in this crate.
+
 use thiserror::Error;
 
 /// General errors for this crate.
@@ -10,6 +12,7 @@ pub enum ConnpassCliError {
     HttpResponse(HttpResponseError),
 }
 
+/// Represents errors around validation.
 #[derive(Debug, Error)]
 pub enum ValidationError {
     /// Uses when a value is out of the specific range.
@@ -20,6 +23,7 @@ pub enum ValidationError {
     InvalidToken { msg: String },
 }
 
+/// Represents errors around HTTP connection.
 #[derive(Debug, Error)]
 pub enum HttpResponseError {
     /// Uses when an error cannot be categorised any more.
