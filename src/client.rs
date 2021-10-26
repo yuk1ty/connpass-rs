@@ -166,6 +166,7 @@ pub mod blocking {
         ///     }
         /// }
         /// ```
+        #[allow(clippy::needless_doctest_main)]
         pub fn send_request(self, query: Query) -> ConnpassResult<ConnpassResponse> {
             let response = self
                 .client
