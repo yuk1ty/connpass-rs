@@ -3,7 +3,11 @@ name = "connpass-rs"
 version = "0.1.0"
 edition = "2018"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+license = "MIT"
+description = "An api client for connpass.com"
+repositroy = "https://github.com/yuk1ty/connpass-rs"
+readme = "README.md"
+keywords = ["connpass"]
 
 [dependencies]
 reqwest = { version = "0.11.5", features = ["json"] }
