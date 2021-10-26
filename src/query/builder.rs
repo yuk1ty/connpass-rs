@@ -48,8 +48,8 @@ impl Default for QueryBuilder {
 /// 1. functions that can accept a single argument.
 /// 2. functions that can acceps a `Vec` type argument.
 ///
-/// The former functions simply add the accepted value to this builder,
-/// but the latter functions _replace_ a value in accumulated in this builder by the accepted one.
+/// The former ones simply add the accepted value to this builder,
+/// but the latter ones always _replace_ the value in placed in this builder by the accepted one.
 impl QueryBuilder {
     /// Initializes `QueryBuilder`.
     pub fn begin() -> Self {
