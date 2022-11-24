@@ -36,7 +36,7 @@ impl Validator for FormatJson {
 
 /// The order of search result.
 /// See more details in https://connpass.com/about/api/.
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Eq, Debug)]
 pub enum OrderOption {
     /// 「更新日時順」
     LastModifiedDate = 1,

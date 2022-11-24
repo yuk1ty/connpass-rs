@@ -10,7 +10,7 @@ pub mod validator;
 /// A query data to extract the specific data from connpass API.
 /// For more details about the respective fields: https://connpass.com/about/api/
 /// The struct is along with the specification.
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Eq, Debug, Default)]
 pub struct Query {
     event_id: Option<Vec<u32>>,
     keyword: Option<Vec<String>>,
@@ -24,25 +24,6 @@ pub struct Query {
     order: Option<OrderOption>,
     count: Option<u8>,
     format: Option<String>,
-}
-
-impl Default for Query {
-    fn default() -> Self {
-        Query {
-            event_id: None,
-            keyword: None,
-            keyword_or: None,
-            ym: None,
-            ymd: None,
-            nickname: None,
-            owner_nickname: None,
-            series_id: None,
-            start: None,
-            order: None,
-            count: None,
-            format: None,
-        }
-    }
 }
 
 impl Query {
