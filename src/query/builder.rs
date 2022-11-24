@@ -9,6 +9,7 @@ use super::{
 };
 
 /// Utility builder for building `query::Query`.
+#[derive(Default)]
 pub struct QueryBuilder {
     event_id: Option<Vec<u32>>,
     keyword: Option<Vec<String>>,
@@ -22,25 +23,6 @@ pub struct QueryBuilder {
     order: Option<OrderOption>,
     count: Option<FetchCountRange>,
     format: Option<FormatJson>,
-}
-
-impl Default for QueryBuilder {
-    fn default() -> Self {
-        Self {
-            event_id: None,
-            keyword: None,
-            keyword_or: None,
-            ym: None,
-            ymd: None,
-            nickname: None,
-            owner_nickname: None,
-            series_id: None,
-            start: None,
-            order: None,
-            count: None,
-            format: None,
-        }
-    }
 }
 
 /// An implementation for QueryBuilder.
